@@ -21,6 +21,8 @@ use super::args::Args;
 use crate::rpc::ApiClient;
 
 pub async fn create_bmc_user(args: Args, api_client: &ApiClient) -> CarbideCliResult<()> {
+    let username = args.username.clone();
     api_client.0.create_bmc_user(args).await?;
+    println!("BMC user {username} created.");
     Ok(())
 }

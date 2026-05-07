@@ -21,6 +21,8 @@ use super::args::Args;
 use crate::rpc::ApiClient;
 
 pub async fn bmc_reset(args: Args, api_client: &ApiClient) -> CarbideCliResult<()> {
+    let machine = args.machine.clone();
     api_client.0.admin_bmc_reset(args).await?;
+    println!("BMC reset issued for machine {machine}.");
     Ok(())
 }

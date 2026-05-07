@@ -21,6 +21,9 @@ use super::args::Args;
 use crate::rpc::ApiClient;
 
 pub async fn admin_power_control(args: Args, api_client: &ApiClient) -> CarbideCliResult<()> {
+    let machine = args.machine.clone();
+    let action = format!("{:?}", args.action);
     api_client.0.admin_power_control(args).await?;
+    println!("Power control action {action} issued for machine {machine}.");
     Ok(())
 }

@@ -36,6 +36,9 @@ pub async fn enable_infinite_boot(
                 AdminPowerControlAction::ForceRestart.into(),
             )
             .await?;
+        println!("Infinite boot enabled and reboot initiated to apply the change.");
+    } else {
+        println!("Infinite boot enabled. Please reboot the machine to apply the change.");
     }
     Ok(())
 }

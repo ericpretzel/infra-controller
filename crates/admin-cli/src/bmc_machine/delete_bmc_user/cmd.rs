@@ -21,6 +21,8 @@ use super::args::Args;
 use crate::rpc::ApiClient;
 
 pub async fn delete_bmc_user(args: Args, api_client: &ApiClient) -> CarbideCliResult<()> {
+    let username = args.username.clone();
     api_client.0.delete_bmc_user(args).await?;
+    println!("BMC user {username} deleted.");
     Ok(())
 }
