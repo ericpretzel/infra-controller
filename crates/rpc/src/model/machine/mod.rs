@@ -293,7 +293,7 @@ impl From<Machine> for rpc::forge::Machine {
                 slot_number: machine.slot_number,
                 tray_index: machine.tray_index,
             }),
-            last_seen_scout_version: machine.last_seen_scout_version,
+            last_scout_observed_version: machine.last_scout_observed_version,
         }
     }
 }

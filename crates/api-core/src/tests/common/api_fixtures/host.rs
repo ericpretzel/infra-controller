@@ -142,7 +142,7 @@ pub async fn host_discover_machine_with_reporter(
             discovery_data: Some(DiscoveryData::Info(discovery_info)),
             create_machine: true,
             discovery_reporter: reporter as i32,
-            reporter_version: reporter_version.map(str::to_owned),
+            discovery_reporter_version: reporter_version.map(str::to_owned),
         }))
         .await
         .unwrap()

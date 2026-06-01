@@ -241,7 +241,7 @@ pub async fn register_machine(
         )),
         create_machine,
         discovery_reporter: discovery_reporter as i32,
-        reporter_version,
+        discovery_reporter_version: reporter_version,
     };
     tracing::info!("register_machine discovery_info {:?}", info);
 

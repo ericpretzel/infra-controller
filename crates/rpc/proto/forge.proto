@@ -3510,7 +3510,7 @@ message Machine {
   optional MachineSpxStatusObservation spx_status_observation = 47;
 
   // Build version of forge-scout last observed during machine discovery registration.
-  optional string last_seen_scout_version = 48;
+  optional string last_scout_observed_version = 48;
 }
 
 message InstanceNetworkRestrictions {
@@ -4695,7 +4695,7 @@ message MachineDiscoveryInfo {
   }
   bool create_machine = 3;
   MachineDiscoveryReporter discovery_reporter = 4;
-  optional string reporter_version = 5;
+  optional string discovery_reporter_version = 5;
 }
 
 message MachineDiscoveryCompletedRequest {

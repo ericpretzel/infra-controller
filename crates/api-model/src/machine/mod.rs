@@ -708,7 +708,7 @@ pub struct Machine {
     pub last_scout_contact_time: Option<DateTime<Utc>>,
 
     /// Build version of forge-scout last observed during machine discovery registration.
-    pub last_seen_scout_version: Option<String>,
+    pub last_scout_observed_version: Option<String>,
 
     /// Failure cause. If failure cause is critical, machine will move into Failed state.
     pub failure_details: FailureDetails,
