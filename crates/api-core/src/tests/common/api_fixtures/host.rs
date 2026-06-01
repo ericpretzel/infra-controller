@@ -134,7 +134,7 @@ pub async fn host_discover_machine_with_reporter(
         ak_pub: AK_PUB_SERIALIZED.to_vec(),
         ak_name: AK_NAME_SERIALIZED.to_vec(),
     });
-    
+
     let response = env
         .api
         .discover_machine(Request::new(MachineDiscoveryInfo {

@@ -18,8 +18,7 @@ use std::net::IpAddr;
 use std::str::FromStr;
 
 use common::api_fixtures::dpu::create_dpu_machine;
-use common::api_fixtures::host::host_discover_dhcp;
-use common::api_fixtures::host::host_discover_machine_with_reporter;
+use common::api_fixtures::host::{host_discover_dhcp, host_discover_machine_with_reporter};
 use common::api_fixtures::{FIXTURE_DHCP_RELAY_ADDRESS, create_managed_host, create_test_env};
 use itertools::Itertools;
 use mac_address::MacAddress;
@@ -275,7 +274,8 @@ async fn test_discovery_records_scout_version(
         host_machine_interface_id,
         rpc::MachineDiscoveryReporter::Scout,
         Some("v0.11.0-pr-11-g14586866e"),
-    ).await;
+    )
+    .await;
 
     // The version is exposed on the Machine resource over gRPC.
     let rpc_machine = env
@@ -314,15 +314,12 @@ async fn test_discovery_ignores_version_from_dpu_agent(
         host_machine_interface_id,
         rpc::MachineDiscoveryReporter::DpuAgent,
         Some("v0.11.0-pr-11-g14586866e"),
-    ).await;
-
-    let machine = db::machine::find_one(
-        &env.pool,
-        &machine_id,
-        MachineSearchConfig::default(),
     )
-    .await?
-    .expect("machine must exist");
+    .await;
+
+    let machine = db::machine::find_one(&env.pool, &machine_id, MachineSearchConfig::default())
+        .await?
+        .expect("machine must exist");
 
     assert!(machine.last_scout_observed_version.is_none());
 

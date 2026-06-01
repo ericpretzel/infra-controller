@@ -429,8 +429,12 @@ pub(crate) async fn discover_machine(
             .as_deref()
             .filter(|v| !v.is_empty())
     {
-        db::machine::update_last_scout_observed_version(&stable_machine_id, scout_version, &mut txn)
-            .await?;
+        db::machine::update_last_scout_observed_version(
+            &stable_machine_id,
+            scout_version,
+            &mut txn,
+        )
+        .await?;
     }
 
     txn.commit().await?;
