@@ -347,6 +347,7 @@ pub async fn dpu_discover_machine(
                 DiscoveryInfo::try_from(HardwareInfo::from(dpu_config)).unwrap(),
             )),
             create_machine: true,
+            ..Default::default()
         }))
         .await
         .unwrap()
