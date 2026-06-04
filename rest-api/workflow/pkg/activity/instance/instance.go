@@ -16,22 +16,22 @@ import (
 
 	"go.temporal.io/sdk/client"
 
-	cdb "github.com/NVIDIA/infra-controller-rest/db/pkg/db"
-	cdbm "github.com/NVIDIA/infra-controller-rest/db/pkg/db/model"
-	"github.com/NVIDIA/infra-controller-rest/db/pkg/db/paginator"
-	cdbp "github.com/NVIDIA/infra-controller-rest/db/pkg/db/paginator"
+	cdb "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db"
+	cdbm "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/model"
+	"github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/paginator"
+	cdbp "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/paginator"
 
-	sc "github.com/NVIDIA/infra-controller-rest/workflow/pkg/client/site"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/queue"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/util"
+	sc "github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/client/site"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/queue"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/util"
 
-	cwsv1 "github.com/NVIDIA/infra-controller-rest/workflow-schema/schema/site-agent/workflows/v1"
-	"github.com/NVIDIA/infra-controller-rest/workflow/internal/config"
-	cwm "github.com/NVIDIA/infra-controller-rest/workflow/internal/metrics"
+	cwsv1 "github.com/NVIDIA/infra-controller/rest-api/workflow-schema/schema/site-agent/workflows/v1"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/internal/config"
+	cwm "github.com/NVIDIA/infra-controller/rest-api/workflow/internal/metrics"
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	cwutil "github.com/NVIDIA/infra-controller-rest/common/pkg/util"
+	cwutil "github.com/NVIDIA/infra-controller/rest-api/common/pkg/util"
 )
 
 // ManageInstance is an activity wrapper for managing Instance lifecycle that allows
@@ -229,7 +229,7 @@ func (mi ManageInstance) UpdateInstancesInDB(ctx context.Context, siteID uuid.UU
 			controllerInstanceID != nil ||
 			isUpdatePending != nil ||
 			tpmEkCertificateUpdated != nil ||
-			!util.NetworkSecurityGroupPropagationDetailsEqual(instance.NetworkSecurityGroupPropagationDetails, sitePropagationStatus)
+			!instance.NetworkSecurityGroupPropagationDetails.Equal(sitePropagationStatus)
 
 		if needsUpdate {
 			// If the Instance in the DB has propagation details but the site reported no propagation details
@@ -1252,12 +1252,15 @@ func (mi ManageInstance) UpdateInstanceMetadata(ctx context.Context, siteID uuid
 				TenantOrganizationId: controllerInstance.Config.GetTenant().GetTenantOrganizationId(),
 				TenantKeysetIds:      controllerInstance.Config.GetTenant().GetTenantKeysetIds(),
 			},
-			Os:         controllerInstance.GetConfig().GetOs(),
-			Network:    controllerInstance.GetConfig().GetNetwork(),
-			Infiniband: controllerInstance.GetConfig().GetInfiniband(),
+			Os:                   controllerInstance.GetConfig().GetOs(),
+			Network:              controllerInstance.GetConfig().GetNetwork(),
+			Infiniband:           controllerInstance.GetConfig().GetInfiniband(),
+			Nvlink:               controllerInstance.GetConfig().GetNvlink(),
+			DpuExtensionServices: controllerInstance.GetConfig().GetDpuExtensionServices(),
 		},
 	}
 
+	// The error is only logged because it'll be retried on next inventory update
 	we, err := tc.ExecuteWorkflow(ctx, workflowOptions, "UpdateInstance", updateInstanceRequest)
 	if err != nil {
 		logger.Error().Err(err).Str("Controller Instance ID", controllerInstance.GetId().String()).Msg("failed to trigger workflow to update Instance Metadata")

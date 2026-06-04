@@ -15,18 +15,18 @@ import (
 
 	"go.temporal.io/sdk/client"
 
-	cdb "github.com/NVIDIA/infra-controller-rest/db/pkg/db"
-	cdbm "github.com/NVIDIA/infra-controller-rest/db/pkg/db/model"
-	cdbp "github.com/NVIDIA/infra-controller-rest/db/pkg/db/paginator"
+	cdb "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db"
+	cdbm "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/model"
+	cdbp "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/paginator"
 
-	cwm "github.com/NVIDIA/infra-controller-rest/workflow/internal/metrics"
-	sc "github.com/NVIDIA/infra-controller-rest/workflow/pkg/client/site"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/queue"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/util"
+	cwm "github.com/NVIDIA/infra-controller/rest-api/workflow/internal/metrics"
+	sc "github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/client/site"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/queue"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/util"
 
-	cwssaws "github.com/NVIDIA/infra-controller-rest/workflow-schema/schema/site-agent/workflows/v1"
+	cwssaws "github.com/NVIDIA/infra-controller/rest-api/workflow-schema/schema/site-agent/workflows/v1"
 
-	cwutil "github.com/NVIDIA/infra-controller-rest/common/pkg/util"
+	cwutil "github.com/NVIDIA/infra-controller/rest-api/common/pkg/util"
 )
 
 // ManageVpc is an activity wrapper for managing VPC lifecycle that allows
@@ -177,7 +177,7 @@ func (mv ManageVpc) UpdateVpcsInDB(ctx context.Context, siteID uuid.UUID, vpcInv
 			controllerVpcID != nil ||
 			networkVirtualizationType != nil ||
 			!util.PtrsEqual(vpc.RoutingProfile, controllerVpc.RoutingProfileType) ||
-			!util.NetworkSecurityGroupPropagationDetailsEqual(vpc.NetworkSecurityGroupPropagationDetails, sitePropagationStatus) ||
+			!vpc.NetworkSecurityGroupPropagationDetails.Equal(sitePropagationStatus) ||
 			// Changing VNI isn't allowed after creation, and it should never go back to nil - that would be a bug.
 			// We should assume status _could start_ as null and then update to the active VPC VNI.
 			// Status should never go back to nil - that would be a bug.

@@ -22,22 +22,21 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	cdb "github.com/NVIDIA/infra-controller-rest/db/pkg/db"
-	cdbm "github.com/NVIDIA/infra-controller-rest/db/pkg/db/model"
-	cdbp "github.com/NVIDIA/infra-controller-rest/db/pkg/db/paginator"
-	swe "github.com/NVIDIA/infra-controller-rest/site-workflow/pkg/error"
+	cdb "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db"
+	cdbm "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/model"
+	cdbp "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/paginator"
+	swe "github.com/NVIDIA/infra-controller/rest-api/site-workflow/pkg/error"
 
-	cwma "github.com/NVIDIA/infra-controller-rest/workflow/pkg/activity/machine"
-	cwu "github.com/NVIDIA/infra-controller-rest/workflow/pkg/util"
+	cwma "github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/activity/machine"
 
-	"github.com/NVIDIA/infra-controller-rest/api/internal/config"
-	"github.com/NVIDIA/infra-controller-rest/api/pkg/api/handler/util/common"
-	"github.com/NVIDIA/infra-controller-rest/api/pkg/api/model"
-	"github.com/NVIDIA/infra-controller-rest/api/pkg/api/pagination"
-	sc "github.com/NVIDIA/infra-controller-rest/api/pkg/client/site"
-	auth "github.com/NVIDIA/infra-controller-rest/auth/pkg/authorization"
-	cutil "github.com/NVIDIA/infra-controller-rest/common/pkg/util"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/queue"
+	"github.com/NVIDIA/infra-controller/rest-api/api/internal/config"
+	"github.com/NVIDIA/infra-controller/rest-api/api/pkg/api/handler/util/common"
+	"github.com/NVIDIA/infra-controller/rest-api/api/pkg/api/model"
+	"github.com/NVIDIA/infra-controller/rest-api/api/pkg/api/pagination"
+	sc "github.com/NVIDIA/infra-controller/rest-api/api/pkg/client/site"
+	auth "github.com/NVIDIA/infra-controller/rest-api/auth/pkg/authorization"
+	cutil "github.com/NVIDIA/infra-controller/rest-api/common/pkg/util"
+	"github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/queue"
 )
 
 // ~~~~~ Create Handler ~~~~~ //
@@ -1066,7 +1065,7 @@ func (uith UpdateInstanceTypeHandler) Handle(c echo.Context) error {
 				existingCap := existingMacCapMap[capKey]
 				// The incoming requested capability doesn't exist at all currently,
 				// so it's brand new.
-				if existingCap != nil && cwu.MachineCapabilitiesEqual(existingCap, &cdbm.MachineCapability{
+				if existingCap != nil && existingCap.Equal(&cdbm.MachineCapability{
 					Type:             reqMacCap.Type,
 					Name:             reqMacCap.Name,
 					Frequency:        reqMacCap.Frequency,

@@ -12,16 +12,15 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	cdb "github.com/NVIDIA/infra-controller-rest/db/pkg/db"
-	cdbm "github.com/NVIDIA/infra-controller-rest/db/pkg/db/model"
-	cdbp "github.com/NVIDIA/infra-controller-rest/db/pkg/db/paginator"
+	cdb "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db"
+	cdbm "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/model"
+	cdbp "github.com/NVIDIA/infra-controller/rest-api/db/pkg/db/paginator"
 
-	sc "github.com/NVIDIA/infra-controller-rest/workflow/pkg/client/site"
-	"github.com/NVIDIA/infra-controller-rest/workflow/pkg/util"
+	sc "github.com/NVIDIA/infra-controller/rest-api/workflow/pkg/client/site"
 
-	cwssaws "github.com/NVIDIA/infra-controller-rest/workflow-schema/schema/site-agent/workflows/v1"
+	cwssaws "github.com/NVIDIA/infra-controller/rest-api/workflow-schema/schema/site-agent/workflows/v1"
 
-	cwutil "github.com/NVIDIA/infra-controller-rest/common/pkg/util"
+	cwutil "github.com/NVIDIA/infra-controller/rest-api/common/pkg/util"
 )
 
 // ManageInstanceType is an activity wrapper for managing InstanceType lifecycle that allows
@@ -224,7 +223,7 @@ func (mv ManageInstanceType) UpdateInstanceTypeInCloud(ctx context.Context, site
 
 		cloudCap := cloudCapMap[macCapName]
 
-		if cloudCap == nil || !util.MachineCapabilitiesEqual(cloudCap, controllerCap) {
+		if cloudCap == nil || !cloudCap.Equal(controllerCap) {
 
 			if cloudCap != nil {
 				// If cloud and site knew about it but they have mismatched properties,

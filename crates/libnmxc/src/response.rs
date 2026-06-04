@@ -15,15 +15,21 @@
  * limitations under the License.
  */
 
-pub mod args;
-pub mod cmd;
+use crate::{NmxcError, nmxc_model};
 
-use crate::cfg::run::Run;
-use crate::cfg::runtime::RuntimeContext;
-use crate::errors::CarbideCliResult;
-
-impl Run for args::Args {
-    async fn run(self, ctx: &mut RuntimeContext) -> CarbideCliResult<()> {
-        cmd::find(&ctx.api_client).await
+pub(crate) fn check_server_header_success(
+    header: Option<&nmxc_model::ServerHeader>,
+    operation: &'static str,
+) -> Result<(), NmxcError> {
+    let Some(header) = header else {
+        return Err(NmxcError::MissingServerHeader { operation });
+    };
+    if header.return_code == nmxc_model::StReturnCode::NmxStSuccess as i32 {
+        Ok(())
+    } else {
+        Err(NmxcError::NmxReturnCode {
+            return_code: header.return_code,
+            operation,
+        })
     }
 }
